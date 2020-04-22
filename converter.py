@@ -14,6 +14,5 @@ replacedText = re.sub(r'([亜-熙ぁ-んァ-ヶ])．', r'\1。', replacedText)
 
 replacedText = re.sub(r'(\d)(?=(\d{3})+(?!\d))', r'\1,', replacedText)
 
-print(text)
-print('\n================\n')
-print(replacedText)
+with open(file, mode='w') as f:
+    f.write(replacedText)
