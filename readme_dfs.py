@@ -1,4 +1,5 @@
 import pathlib
+import sys
 import os
 
 files = []
@@ -10,7 +11,10 @@ def recursive(path): # dfs
         elif po.is_file() & po.match('*/README.md'):
             files.append(str(po))
 
-recursive(pathlib.Path('.'))
+root = './'
+if len(sys.argv) == 2:
+    root += sys.argv[1]
+recursive(pathlib.Path(root))
 
 for file in files:
     os.system('python Proofreader/converter.py ' + file)
