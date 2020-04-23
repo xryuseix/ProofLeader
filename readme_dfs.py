@@ -13,7 +13,7 @@ def recursive(path): # dfs
 recursive(pathlib.Path('.'))
 
 for file in files:
-    os.system('python converter.py ' + file)
-    print(file + ': OK')
+    os.system('python Proofreader/converter.py ' + file)
+    print(file + ' : OK')
 
 print('converter : ALL OK')
