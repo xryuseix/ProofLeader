@@ -1,16 +1,20 @@
 # -*- coding: utf-8 -*-
 import sys
+import csv
 import re
+import os
 
-def readFile(path, csv=False):
+def readFile(path, isCsv=False):
     text = ""
     wordList = []
     with open(path) as f:
-        if csv:
-            wordList.append(f.read().split(','))
+        if isCsv:
+            reader = csv.reader(f)
+            for row in reader:
+                wordList.append(row)
         else:
             text += f.read()
-    if csv:
+    if isCsv:
         return wordList
     else:
         return text
@@ -21,6 +25,8 @@ def dotComma(text):
     return re.sub('({})．'.format(ja), r'\1。', replacedText)
 
 def word2Word(text, file):
+    if not os.path.isfile('./word_list.csv'):
+        return text
     wordList = readFile('./word_list.csv', True)
     textArr = text.split('```')
 
@@ -30,7 +36,7 @@ def word2Word(text, file):
             for k in wordList:
                 reObj = re.search(k[0], text)
                 if reObj:
-                    print(file,arr+i,k[0],k[1],reObj.start())
+                    print("WARNING: {}:{}:{}: ({}) => ({})".format(file, arr+i, reObj.start(), k[0], reObj.group()))
     return '```'.join(textArr)
 
 def numComma(text):
@@ -43,12 +49,9 @@ def numComma(text):
 file = sys.argv[1]
 text = readFile(file)
 
-
-
-
 text = dotComma(text)
 text = numComma(text)
 text = word2Word(text, file)
 
-print(text)
-
+with open(file, mode='w') as f:
+    f.write(text)
