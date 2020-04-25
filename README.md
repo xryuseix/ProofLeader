@@ -23,6 +23,18 @@ converter : ALL OK
 CHECK!! -> https://competent-morse-3888be.netlify.app/
 ```
 
+* 文章表現の警告機能
+同一ディレクトリに`word_list.csv`ファイルを作り，以下のように記述します．
+
+```
+Before,After
+Before,After
+Before,After
+```
+
+するとBeforeが文章に入っていた場合Afterにした方がいいと警告します．
+Before,Afterは正規表現で記述してください．
+
 ## ディレクトリの配置方法
 
 現在`folder_a/`にいて，`folder_b/`内のREADME.mdを修正したいとします．
@@ -37,6 +49,7 @@ folder_a/ -- folder_b/
 
 * Python3(3.6.4以上)
 * pathlib
-* os
 * sys
+* scv
+* os
 * re
