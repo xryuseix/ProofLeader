@@ -25,9 +25,9 @@ def dotComma(text):
     return re.sub('({})．'.format(ja), r'\1。', replacedText)
 
 def word2Word(text, file):
-    if not os.path.isfile('./word_list.csv'):
+    if not os.path.isfile('./Proofreader/word_list.csv'):
         return text
-    wordList = readFile('./word_list.csv', True)
+    wordList = readFile('./Proofreader/word_list.csv', True)
     textArr = text.split('```')
 
     for arr in range(0, len(textArr), 2):
@@ -36,7 +36,7 @@ def word2Word(text, file):
             for k in wordList:
                 reObj = re.search(k[0], text)
                 if reObj:
-                    print("WARNING: {}:{}:{}: ({}) => ({})".format(file, arr+i, reObj.start(), k[0], reObj.group()))
+                    print("WARNING: {}:{}:{}: ({}) => ({})".format(file, arr+i, reObj.start(), reObj.group(), k[1]))
     return '```'.join(textArr)
 
 def numComma(text):
