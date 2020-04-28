@@ -8,7 +8,7 @@ def recursive(path): # dfs
     for po in path.iterdir():
         if po.is_dir():
             recursive(po)
-        elif po.is_file() & po.match('*/README.md'):
+        elif po.is_file() & po.match('*.md'):
             files.append(str(po))
 
 root = './'

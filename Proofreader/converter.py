@@ -36,7 +36,7 @@ def word2Word(text, file):
             for k in wordList:
                 reObj = re.search(k[0], text)
                 if reObj:
-                    print("WARNING: {}:{}:{}: ({}) => ({})".format(file, arr+i, reObj.start(), reObj.group(), k[1]))
+                    print("WARNING: {}:{}:{}: ({}) => ({})".format(file, arr+i+1, reObj.start(), reObj.group(), k[1]))
     return '```'.join(textArr)
 
 def numComma(text):
