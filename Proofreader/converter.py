@@ -19,11 +19,13 @@ def readFile(path, isCsv=False):
     else:
         return text
 
+# ．，を、。に変換
 def dotComma(text):
     ja = '[亜-熙ぁ-んァ-ヶ]'
     replacedText = re.sub('({})，'.format(ja), r'\1、', text)
     return re.sub('({})．'.format(ja), r'\1。', replacedText)
 
+# word_listを参照して警告
 def word2Word(text, file):
     if not os.path.isfile('./Proofreader/word_list.csv'):
         return text
@@ -43,6 +45,9 @@ def numComma(text):
     digit = '(\d)(?=(\d{3})+(?!\d))'
     textArr = text.split('```')
     for i in range(0, len(textArr), 2):
+        textArr[i] = re.sub('([^\n\d, ])(\d+)', r'\1 \2', textArr[i])
+        textArr[i] = re.sub('(\d)([^\n\d, ])', r'\1 \2', textArr[i])
+        textArr[i] = re.sub('(\n[a-zA-Z]+)[亜-熙ぁ-んァ-ヶ]', r'\1 ', textArr[i])
         textArr[i] = re.sub(digit, r'\1,', textArr[i])
     return '```'.join(textArr)
 
