@@ -1,4 +1,4 @@
-#  Proofre a  e      r カレントディレクトリより深い位置にいある m d     ファイルの句読点や整数表記を修正します。
+<pre></pre><pre></pre><pre></pre>#  Proofre a  e      r カレントディレクトリより深い位置にいある m d     ファイルの句読点や整数表記を修正します。
 
 * `，`は`、`に変換されます。
 * `．`は`。`に変換されます。
@@ -19,7 +19,7 @@ sh Proofreader/proofreader.sh
 folder_a/folder_b/README.md : OK
 folder_c/README.md : OK
 converter : ALL OK
-CHECK!! -> https://competent-morse-3888be.netlify.app/
+CHECK!! -> https://competent-morse- 3,888 be.netlify.app/
 ```
 
 * 文章表現の警告機能
