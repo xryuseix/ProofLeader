@@ -1,24 +1,8 @@
 # -*- coding: utf-8 -*-
 import sys
-import csv
 import re
 import os
-
-
-def readFile(path, isCsv=False):
-    text = ""
-    wordList = []
-    with open(path) as f:
-        if isCsv:
-            reader = csv.reader(f)
-            for row in reader:
-                wordList.append(row)
-        else:
-            text += f.read()
-    if isCsv:
-        return wordList
-    else:
-        return text
+import readFile as File
 
 
 # ．，を、。に変換
@@ -30,9 +14,9 @@ def dotComma(text):
 
 # word_listを参照して警告
 def word2Word(text, file):
-    if not os.path.isfile("./Proofreader/word_list.csv"):
+    if not os.path.isfile("./ProofLeader/word_list.csv"):
         return text
-    wordList = readFile("./Proofreader/word_list.csv", True)
+    wordList = File.readFile("./ProofLeader/word_list.csv", True)
     textArr = text.split("```")
 
     for arr in range(0, len(textArr), 2):
@@ -42,7 +26,7 @@ def word2Word(text, file):
                 reObj = re.search(k[0], text)
                 if reObj:
                     print(
-                        "WARNING: {}:{}:{}: ({}) => ({})".format(
+                        "\033[33mWARNING\033[0m: {}:{}:{}: ({}) => ({})".format(
                             file, arr + i + 1, reObj.start(), reObj.group(), k[1]
                         )
                     )
@@ -69,7 +53,7 @@ def numComma(text):
 
 
 file = sys.argv[1]
-text = readFile(file)
+text = File.readFile(file)
 
 text = dotComma(text)
 text = numComma(text)
