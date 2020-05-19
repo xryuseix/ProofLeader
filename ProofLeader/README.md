@@ -82,7 +82,9 @@ ProofLeader/README.md
 
 <pre>
 folder_a/ -- folder_b/
-          |- RroofLeader/
+          |- RroofLeader/ -- REAMDE.md
+                          |- .version
+                          |- XXX.py
 </pre>
 
 ## 必要なライブラリ及びパッケージ
