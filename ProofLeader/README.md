@@ -15,9 +15,9 @@
 * 起動コマンド
 
 <pre>
-sh Proofreader/proofreader.sh
+python ProofLeader/proofLeader.py
 or
-sh Proofreader/proofreader.sh TARGET_DIR/
+python ProofLeader/proofLeader.py TARGET_DIR/
 </pre>
 
 * 期待される出力例
@@ -29,8 +29,10 @@ converter : ALL OK
 CHECK!! -> https://competent-morse-3888be.netlify.app/
 </pre>
 
+## 機能
+
 * 文章表現の警告機能
-同じディレクトリに`word_list.csv`ファイルを作り、以下のように記述します。
+`/Proofreader`に`word_list.csv`ファイルを作り、以下のように記述します。
 
 <pre>
 Before1,After1
@@ -47,7 +49,7 @@ WARNING: ファイル名:行数:何文字: (致します) => (いたします)
 ~Before,Afterは正規表現で記述してください。~
 正規表現で書きたいのですが、現在`(|)`の 3 文字くらいしか使えません。ごめんなさい><
 
-* 補足
+### 補足
 `<pre></pre>`で囲われている内側の文字に関して、**変換はされません**．ですが、警告は出します。
 
 (例)
@@ -63,6 +65,16 @@ WARNING: ファイル名:行数:何文字: (致します) => (いたします)
 </pre>
 ```
 
+## 除外ファイルの設定
+
+本プログラムは実行ディレクトリ内の全てのファイルに対して校閲します。
+ですが、`/Proofreader`に`exclusion_list.csv`ファイルを作り、以下のように記述することで校閲対象から除外することができます。なお、正規表現は使えません。
+
+<pre>
+SampleFolder/ex_list.md,
+ProofLeader/README.md
+</pre>
+
 ## ディレクトリの配置方法
 
 現在`folder_a/`にいて、`folder_b/`内のREADME.mdを修正したいとします。
@@ -70,7 +82,7 @@ WARNING: ファイル名:行数:何文字: (致します) => (いたします)
 
 <pre>
 folder_a/ -- folder_b/
-          |- Rroofreader/
+          |- RroofLeader/
 </pre>
 
 ## 必要なライブラリ及びパッケージ
@@ -81,3 +93,7 @@ folder_a/ -- folder_b/
 * scv
 * os
 * re
+
+## URL
+
+[https://github.com/xryuseix/ProofLeader](https://github.com/xryuseix/ProofLeader)
