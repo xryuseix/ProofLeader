@@ -1,4 +1,4 @@
-# Proofreader
+# ProofLeader
 カレントディレクトリより深い位置にある.mdファイルの句読点や整数表記を修正します。
 
 (変換例)
@@ -32,7 +32,7 @@ CHECK!! -> https://competent-morse-3888be.netlify.app/
 ## 機能
 
 * 文章表現の警告機能
-`/Proofreader`に`word_list.csv`ファイルを作り、以下のように記述します。
+`/ProofLeader`に`word_list.csv`ファイルを作り、以下のように記述します。
 
 <pre>
 Before1,After1
@@ -68,7 +68,7 @@ WARNING: ファイル名:行数:何文字: (致します) => (いたします)
 ## 除外ファイルの設定
 
 本プログラムは実行ディレクトリ内の全てのファイルに対して校閲します。
-ですが、`/Proofreader`に`exclusion_list.csv`ファイルを作り、以下のように記述することで校閲対象から除外することができます。なお、正規表現は使えません。
+ですが、`/ProofLeader`に`exclusion_list.csv`ファイルを作り、以下のように記述することで校閲対象から除外することができます。なお、正規表現は使えません。
 
 <pre>
 SampleFolder/ex_list.md,
