@@ -18,16 +18,19 @@ def word2Word(text, file):
         return text
     wordList = File.readFile("./ProofLeader/word_list.csv", True)
     textArr = text.split("```")
-
-    for arr in range(0, len(textArr), 2):
-        textList = textArr[arr].split("\n")
-        for i, text in enumerate(textList):
+    lines = 0
+    for i, arr in enumerate(textArr):
+        if i % 2:
+            lines += len(arr)
+            continue
+        textList = arr.split("\n")
+        for j, text in enumerate(textList):
             for k in wordList:
                 reObj = re.search(k[0], text)
                 if reObj:
                     print(
                         "\033[33mWARNING\033[0m: {}:{}:{}: ({}) => ({})".format(
-                            file, arr + i + 1, reObj.start(), reObj.group(), k[1]
+                            file, lines + j + 1, reObj.start(), reObj.group(), k[1]
                         )
                     )
     return "```".join(textArr)
