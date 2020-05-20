@@ -16,7 +16,7 @@
 
 <pre>
 python ProofLeader/proofLeader.py
-or
+または
 python ProofLeader/proofLeader.py TARGET_DIR/
 </pre>
 
@@ -31,13 +31,13 @@ CHECK!! -> https://competent-morse-3888be.netlify.app/
 
 ## 機能
 
-* 文章表現の警告機能
+* **文章表現の警告機能(ver 1.4で書式が変更になりました)**
 `/ProofLeader`に`word_list.csv`ファイルを作り、以下のように記述します。
 
 <pre>
-Before1,After1
-Before2,After2
-Before3,After3
+After1,Before1
+After2,Before2_1,Before2_2,Before2_3
+After3,Before3_1,Before3_2
 </pre>
 
 すると以下のようにBeforeが文章に入っていた場合Afterにした方がいいと警告します。
@@ -46,8 +46,11 @@ Before3,After3
 WARNING: ファイル名:行数:何文字: (致します) => (いたします)
 </pre>
 
-~Before,Afterは正規表現で記述してください。~
-正規表現で書きたいのですが、現在`(|)`の 3 文字くらいしか使えません。ごめんなさい><
+またBeforeはOR指定ができます．
+<pre>
+A,(B|C)
+</pre>
+とすると，BまたはCのとき警告します．
 
 ### 補足
 `<pre></pre>`で囲われている内側の文字に関して、**変換はされません**．ですが、警告は出します。
@@ -89,7 +92,7 @@ folder_a/ -- folder_b/
 
 ## 必要なライブラリ及びパッケージ
 
-* Python 3 ( 3 . 6 . 4 以上)
+* Python3 (3.6.4で動作確認済み)
 * pathlib
 * sys
 * scv
