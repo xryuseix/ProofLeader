@@ -8,7 +8,9 @@ def readFile(path, isCsv=False):
         if isCsv:
             reader = csv.reader(f)
             for row in reader:
-                wordList.append(row)
+                for i, r in enumerate(row):
+                    if i:
+                        wordList.append([r, row[0]])
         else:
             text += f.read()
     if isCsv:
