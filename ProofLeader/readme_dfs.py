@@ -1,7 +1,7 @@
 import pathlib
 import sys
 import os
-import readFile as File
+import read_file as File
 
 exFiles = File.readFile("./ProofLeader/exclusion_list.csv").split(',\n')
 
