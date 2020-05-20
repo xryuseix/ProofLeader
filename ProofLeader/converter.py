@@ -2,7 +2,7 @@
 import sys
 import re
 import os
-import readFile as File
+import read_file as File
 
 
 # ．，を、。に変換
