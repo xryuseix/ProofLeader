@@ -33,7 +33,7 @@ def word2Word(text, file):
 def numComma(text):
     resText = ""
     digit = "(\d)(?=(\d{3})+(?!\d))"
-    delIndex = [m.span() for m in re.finditer("<pre>|</pre>|```", text)]
+    delIndex = [m.span() for m in re.finditer("<pre>|</pre>|```|[^`]`[^`]", text)]
     delIndex.insert(0, [0, 0])
     delIndex.append([len(text), len(text)])
 
@@ -51,6 +51,7 @@ def numComma(text):
         else:
             resText += subText + text[delIndex[i + 1][0] : delIndex[i + 1][1]]
     return resText
+
 
 def converter(file):
     text = File.readFile(file)
