@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import sys
 import re
 import os
 import read_file as File
@@ -53,13 +52,12 @@ def numComma(text):
             resText += subText + text[delIndex[i + 1][0] : delIndex[i + 1][1]]
     return resText
 
+def converter(file):
+    text = File.readFile(file)
 
-file = sys.argv[1]
-text = File.readFile(file)
+    text = dotComma(text)
+    text = numComma(text)
+    text = word2Word(text, file)
 
-text = dotComma(text)
-text = numComma(text)
-text = word2Word(text, file)
-
-with open(file, mode="w") as f:
-    f.write(text)
+    with open(file, mode="w") as f:
+        f.write(text)
