@@ -94,7 +94,6 @@ folder_a/ -- folder_b/
 
 * Python3 (3.6.4で動作確認済み)
 * pathlib
-* sys
 * scv
 * os
 * re
