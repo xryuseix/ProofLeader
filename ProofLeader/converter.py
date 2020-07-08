@@ -6,9 +6,8 @@ import read_file as File
 
 # ．，を、。に変換
 def dotComma(text):
-    ja = "[亜-熙ぁ-んァ-ヶ]"
-    replacedText = re.sub("({})，".format(ja), r"\1、", text)
-    return re.sub("({})．".format(ja), r"\1。", replacedText)
+    replacedText = re.sub("，", r"、", text)
+    return re.sub("．", r"。", replacedText)
 
 
 # word_listを参照して警告
@@ -29,21 +28,31 @@ def word2Word(text, file):
     return "\n".join(textArr)
 
 
-# 数字を三桁ごとに区切ってカンマ&前後に空白を入れる
-def numComma(text):
+# 数字を三桁ごとに区切ってカンマ
+def comma(num):
+    s = num.split('.')
+    ret = re.sub("(\d)(?=(\d\d\d)+(?!\d))", r"\1,", s[0])
+    if (len(s) > 1):
+        ret += '.' + s[1]
+    return ret
+
+# 前後に空白を入れる
+def space(text):
     resText = ""
-    digit = "(\d)(?=(\d{3})+(?!\d))"
     delIndex = [m.span() for m in re.finditer("<pre>|</pre>|```|`{1}", text)]
     delIndex.insert(0, [0, 0])
     delIndex.append([len(text), len(text)])
 
     for i in range(len(delIndex) - 1):
         subText = text[delIndex[i][1] : delIndex[i + 1][0]]
-        if not i % 2:
-            subText = re.sub("([^\n\d, ])(\d+)", r"\1 \2", subText)  # 数値の前に空白
-            subText = re.sub("(\d)([^\n\d, ])", r"\1 \2", subText)  # 数値の後ろに空白
-            subText = re.sub("(\n[a-zA-Z]+)[亜-熙ぁ-んァ-ヶ]", r"\1 ", subText)  # 先頭英字の後ろに空白
-            subText = re.sub(digit, r"\1,", subText)
+        if i % 2 == 0:
+            subText = re.sub("([^\n\d, ])([+-]?(?:\d+\.?\d*|\.\d+))", r"\1 \2", subText)  # 数値の前に空白
+            subText = re.sub("([+-]?(?:\d+\.?\d*|\.\d+))([^\n\d, ])", r"\1 \2", subText)  # 数値の後ろに空白
+            subText = re.sub("(\n[a-zA-Z]+)([亜-熙ぁ-んァ-ヶ])", r"\1 \2", subText)  # 先頭英字の後ろに空白
+            
+            numPoses = re.finditer("([+-]?(?:\d+\.?\d*|\.\d+))", subText)
+            for p in numPoses: # 三桁ごとにカンマ
+                subText = subText[0 : p.span()[0]] + comma(subText[p.span()[0]:p.span()[1]]) + subText[p.span()[1]:]
             if i + 1 < len(delIndex):
                 resText += subText + text[delIndex[i + 1][0] : delIndex[i + 1][1]]
             else:
@@ -57,7 +66,7 @@ def converter(file):
     text = File.readFile(file)
 
     text = dotComma(text)
-    text = numComma(text)
+    text = space(text)
     text = word2Word(text, file)
 
     with open(file, mode="w") as f:
