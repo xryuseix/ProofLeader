@@ -60,13 +60,18 @@ def comma(num):
 # 前後に空白を入れる
 def space(text):
     resText = ""
-    delIndex = [m.span() for m in re.finditer("<pre>|</pre>|```|`{1}", text)]
+    delIndex = [m.span() for m in re.finditer("<pre>|</pre>|```|`|「|」{1}", text)]
     delIndex.insert(0, [0, 0])
     delIndex.append([len(text), len(text)])
 
     for i in range(len(delIndex) - 1):
         subText = text[delIndex[i][1] : delIndex[i + 1][0]]
-        if i % 2 == 0:
+
+        if i % 2 == 0 or (  # 「英記号列(プログラム)」は除外
+            delIndex[i][1] > 0
+            and text[delIndex[i][1] - 1] == "「"
+            and not re.fullmatch("[^亜-熙ぁ-んァ-ヶ]*", subText)
+        ):
             subText = re.sub(
                 "([^\n\d, \.])([+-]?(?:\d+\.?\d*|\.\d+))", r"\1 \2", subText
             )  # 数値の前に空白
