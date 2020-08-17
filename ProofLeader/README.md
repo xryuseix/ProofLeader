@@ -8,25 +8,36 @@
 * `abc, def`は変換されません。
 * `aは123です`は`a は 123 です`に変換されます。
 
-何がどう変換されるのか、厳密なことはそのうち記述します。
-
 ## 使用方法
 
 * 起動コマンド
 
-<pre>
+```sh
 python ProofLeader/proofLeader.py
 または
-python ProofLeader/proofLeader.py TARGET_DIR/
-</pre>
+python ProofLeader/proofLeader.py -f <FOLDER_NAME>
+```
+
+* コマンドラインオプション
+```sh
+Usage:
+    {f} [-h | --help] [-v | --version] [-s | --search]
+        [-t | --test <FOLDER_NAME>]
+    {f} -h | --help
+Options:
+    -h --help                       ヘルプを表示
+    -f --file <FOLDER_NAME>         ファイル/フォルダを指定して実行
+    -v --version                    ProofLeaderのバージョンを表示
+    -s --search                     特定の文字列を探索
+```
 
 * 期待される出力例
 
 <pre>
-folder_a/folder_b/README.md : OK
-folder_c/README.md : OK
-converter : ALL OK
-CHECK!! -> https://competent-morse-3888be.netlify.app/
+folder_a/folder_b/README.md : <font color="LimeGreen">OK</font>
+folder_c/README.md : <font color="LimeGreen">OK</font>
+converter : <font color="LimeGreen">ALL OK</font>
+<font color="LimeGreen">CHECK!!</font> -> https://competent-morse-3888be.netlify.app/
 </pre>
 
 ## 機能
@@ -41,21 +52,28 @@ After3,Before3_1,Before3_2
 </pre>
 
 すると以下のようにBeforeが文章に入っていた場合Afterにした方がいいと警告します。
+出力例は以下のようになります(Webページ上で文字色黄色は見えにくいので背景色を黒にしています)。
 
 <pre>
-WARNING: ファイル名:行数:何文字: (致します) => (いたします)
+<span style="background-color:#000000">
+<font color="Yellow">WARNING</font><font color="White">: ファイル名:行数:行頭から何文字目: (致します) => (いたします)</font>
+</span>
 </pre>
 
 またBeforeはOR指定ができます。
-<pre>
+
+```
 A,(B|C)
-</pre>
+```
+
 とすると、BまたはCのとき警告します。
 
 ### 補足
+
 `<pre></pre>`または`` ``` ``または`` ` ``で囲われている内側の文字に関して、**変換はされません**。ですが、警告は出します。ただし、入れ子構造にするとエラーが発生する場合がございます。
 
 (例)
+
 ```
 <pre>
 123,456 // 123,456 にはならない
@@ -75,22 +93,46 @@ A,(B|C)
 本プログラムは実行ディレクトリ内の全てのファイルに対して校閲します。
 ですが、`/ProofLeader`に`exclusion_list.csv`ファイルを作り、以下のように記述することで校閲対象から除外することができます。なお、正規表現は使えません。
 
-<pre>
-SampleFolder/ex_list.md,
+```
+SampleFolder/ex_list.md
 ProofLeader/README.md
-</pre>
+```
 
 ## ディレクトリの配置方法
 
 現在`folder_a/`にいて、`folder_b/`内のREADME.mdを修正したいとします。
 そのとき、以下のように配置し、**`folder_a/`で [使用方法の起動コマンド](#使用方法)を使用してください。**
 
-<pre>
+```
 folder_a/ -- folder_b/
           |- RroofLeader/ -- REAMDE.md
                           |- .version
                           |- XXX.py
+```
+
+## 文字列の探索
+
+WARNINGを出すほどでもないけど、全ファイルから特定の文字列を探索したい場合に使用します。
+コマンドラインオプションは`-s`または`--search`です。
+
+```sh
+python ProofLeader/proofLeader.py -s
+```
+
+`/ProofLeader`に`find_list.csv`ファイルを作り、以下のように記述することで校閲対象から除外することができます。なお、正規表現は使えません。
+
+```
+探索したい単語1
+探索したい単語2
+```
+
+出力は以下のようになります。
+
+<pre>
+<font color="SteelBlue">FOUND!!</font>: ファイル名:行数:行頭から何文字目: (探索したい単語1)
+<font color="SteelBlue">FOUND!!</font>: ファイル名:行数:行頭から何文字目: (探索したい単語2)
 </pre>
+
 
 ## 必要なライブラリ及びパッケージ
 
