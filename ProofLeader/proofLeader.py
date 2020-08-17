@@ -1,11 +1,11 @@
 __doc__ = """{f}
 Usage:
     {f} [-h | --help] [-v | --version] [-s | --search]
-        [-t | --test <FILE_NAME>]
+        [-t | --test <FOLDER_NAME>]
     {f} -h | --help
 Options:
     -h --help                       ヘルプを表示
-    -f --file <FILE_NAME>           ファイル/フォルダを指定して実行
+    -f --file <FOLDER_NAME>         ファイル/フォルダを指定して実行
     -v --version                    ProofLeaderのバージョンを表示
     -s --search                     特定の文字列を探索
 """.format(
