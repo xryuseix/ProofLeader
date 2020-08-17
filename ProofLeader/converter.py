@@ -11,20 +11,39 @@ def dotComma(text):
 
 
 # word_listを参照して警告
-def word2Word(text, file):
+def word2Word(text, file, search):
     if not os.path.isfile("./ProofLeader/word_list.csv"):
         return text
     wordList = File.readFile("./ProofLeader/word_list.csv", True)
+    # find_listを開く
+    if search:
+        findListPath = "./ProofLeader/find_list.csv"
+        if not os.path.isfile(findListPath):
+            search = False
+        with open(findListPath) as f:
+            findList = [s.strip() for s in f.readlines()]
+
     textArr = text.splitlines()
+    wordOut = []
+    findOut = []
     for i, text in enumerate(textArr):
-        for li in wordList:
+        for li in wordList:  # 文字列警告
             reObj = re.search(li[0], text)
             if reObj:
-                print(
-                    "\033[33mWARNING\033[0m: {}:{}:{}: ({}) => ({})".format(
-                        file, i + 1, reObj.start(), reObj.group(), li[1]
-                    )
-                )
+                wordOut.append([i + 1, reObj.start(), reObj.group(), li[1]])
+        if search:  # 文字列探索
+            for li in findList:
+                reObj = re.search(li, text)
+                if reObj:
+                    findOut.append([i + 1, reObj.start(), li])
+    for c in wordOut:
+        print(
+            "\033[33mWARNING\033[0m: {}:{}:{}: ({}) => ({})".format(
+                file, c[0], c[1], c[2], c[3]
+            )
+        )
+    for c in findOut:
+        print("\033[36mFOUND!!\033[0m: {}:{}:{}: ({})".format(file, c[0], c[1], c[2]))
     return "\n".join(textArr)
 
 
@@ -35,7 +54,7 @@ def comma(num):
     ret = re.sub("(\d)(?=(\d\d\d)+(?!\d))", r"\1,", s[0])
     if len(s) > 1:
         ret += "." + s[1]
-    return ret, ret.count(',') - beforeCommaNum
+    return ret, ret.count(",") - beforeCommaNum
 
 
 # 前後に空白を入れる
@@ -61,7 +80,6 @@ def space(text):
             numPoses = re.finditer("([+-]?(?:\d+\.?\d*|\.\d+))", subText)
             shift = 0  # カンマを置いた回数
             for p in numPoses:  # 三桁ごとにカンマ
-                # print(p.span())
                 s, tmpShift = comma(subText[p.span()[0] + shift : p.span()[1] + shift])
                 subText = (
                     subText[0 : p.span()[0] + shift]
@@ -78,12 +96,12 @@ def space(text):
     return resText
 
 
-def converter(file):
+def converter(file, search):
     text = File.readFile(file)
 
     text = dotComma(text)
     text = space(text)
-    text = word2Word(text, file)
+    text = word2Word(text, file, search)
 
     with open(file, mode="w") as f:
         f.write(text)
