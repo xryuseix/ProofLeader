@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 __doc__ = """{f}
 Usage:
-    {f} [-h | --help] [-v | --version] [-s | --search]
-        [-t | --test <FOLDER_NAME>]
+    {f} [-v | --version] [-s | --search]
+        [-f | --file <FOLDER_NAME>]
     {f} -h | --help
 Options:
     -h --help                       ヘルプを表示
@@ -25,7 +25,7 @@ if args['--version']:
         print(f.read())
 
 if args['--file']:
-    readme_dfs.dfs(sys.argv[1], search = args['--search'])
+    readme_dfs.dfs(args['--file'][0], search = args['--search'])
 else:
     readme_dfs.dfs(search = args['--search'])
     
