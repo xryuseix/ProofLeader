@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 __doc__ = """{f}
 Usage:
     {f} [-h | --help] [-v | --version] [-s | --search]
