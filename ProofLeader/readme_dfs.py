@@ -17,7 +17,7 @@ def dfs(dir="", search=False):
                 if not str(po) in exFiles:
                     files.append(str(po))
 
-    root = "./"+dir
+    root = "./" + dir
     recursive(pathlib.Path(root))
 
     for file in files:
