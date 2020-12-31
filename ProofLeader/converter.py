@@ -104,33 +104,51 @@ def space(text):
     return resText
 
 
-def space_convert(text):
-    converted_text = ""
-    rm_patterns = ["</{0,1}pre>", "</{0,1}code>", "```"]  # 変換対象外にするタグ一覧
-    text_arr = re.split("|".join(rm_patterns), text)
-    text_arr.pop()
-    ptns_in_text = [
-        text[m.span()[0] : m.span()[1]]
-        for m in re.finditer("|".join(rm_patterns), text)
-    ]
-    print(text_arr)
-    print(ptns_in_text)
+# 数値の前後と行頭にスペースを入れる
+class SpaceConvert:
+    def __init__(self, text: str):
+        self.text = text
 
-    # for i in range(len(text)):
-    #     for tag in tags:
-    #         # タグの開始
-    #         if text[i : i + len(tags + 2)] == "<%s>" % tag:
-    #             tags[tag] += 1
-    #         # タグの終了
-    #         if text[i : i + len(tags + 3)] == "</%s>" % tag:
-    #             tags[tag] -= 1
-    #     for block in blocks:
-    #         # タグの開始
-    #         if text[i : i + len(tags + 2)] == "%s" % block:
-    #             tags[tag] += 1
-    #         # タグの終了
-    #         if text[i : i + len(tags + 3)] == "</%s>" % tag:
-    #             tags[tag] -= 1
+    # 数値の前後と行頭にスペースを入れる
+    def add_space(self, text: str):
+        print(text)
+        # 数値の前に空白
+        text = re.sub("([^\n\d, \.])([+-]?(?:\d+\.?\d*|\.\d+))", r"\1 \2", text)
+        # 数値の後ろに空白
+        text = re.sub("([+-]?(?:\d+\.?\d*|\.\d+))([^\n\d, \.])", r"\1 \2", text)
+        # 先頭英字の後ろに空白
+        text = re.sub("(\n[a-zA-Z]+)([亜-熙ぁ-んァ-ヶ])", r"\1 \2", text)
+        print(text + "\n")
+        return text
+
+    # 文字列を除外パターンで分離
+    def split_text(self):
+        converted_text = ""
+        # 変換対象外にするパターン一覧
+        rm_patterns = ["</{0,1}pre>", "</{0,1}code>", "```"]
+        # 除外パターンでテキストを分割
+        text_arr = re.split("|".join(rm_patterns), self.text)
+        text_arr.pop()
+        # text_arrの各文字列がどのパターンの中にあるか
+        ptns_in_text = [
+            self.text[m.span()[0] : m.span()[1]]
+            for m in re.finditer("|".join(rm_patterns), self.text)
+        ]
+
+        # 現在囲まれているタグ一覧
+        ptn_state = []
+
+        for doc, ptn in zip(text_arr, ptns_in_text):
+            ptn = ptn.replace("/", "")  # 終了タグと開始タグを一緒にする
+            if not ptn_state:  # 除外パターンに囲われていない時
+                doc = self.add_space(doc)
+            converted_text += doc
+            if not ptn in ptn_state:  # 除外パターンの開始
+                ptn_state.append(ptn)
+            else:  # 除外パターンの終了
+                ptn_state.remove(ptn)
+            converted_text += ptn
+        return converted_text
 
 
 def converter(file, search):
@@ -146,4 +164,5 @@ def converter(file, search):
 
 
 if __name__ == "__main__":
-    space_convert("AAA<pre>ZZZ</pre>CCC```ZZZ```")
+    sc = SpaceConvert("AAA<pre>ZZ123Z</pre>CC1234C```ZZZ```")
+    print(sc.split_text())
