@@ -47,7 +47,6 @@ def word_to_word(text, file, search):
     return "\n".join(textArr)
 
 
-# 数字を三桁ごとに区切ってカンマ
 def digit_comma(num):
     beforeCommaNum = num.count(",")
     s = num.split(".")
@@ -55,6 +54,28 @@ def digit_comma(num):
     if len(s) > 1:
         ret += "." + s[1]
     return ret, ret.count(",") - beforeCommaNum
+
+
+# 数字を三桁ごとに区切ってカンマ
+class DigitComma:
+    def __init__(self, text: str):
+        self.text = text
+
+    # 数字を三桁ごとに区切ってカンマ
+    def __digit_comma(self, num: str):
+        num = num.group()
+        print(num)
+        integer_decimal = num.split(".")
+        commad_num = re.sub("(\d)(?=(\d\d\d)+(?!\d))", r"\1,", integer_decimal[0]) # 整数部
+        if len(integer_decimal) > 1:
+            commad_num += "." + integer_decimal[1] # 小数部
+        return commad_num
+
+    # textから数値の場所のみを切り出す
+    def cut_out(self):
+        # 数値を切り出してカンマを挿入
+        return re.sub(r'\d+[.,\d]*\d+', self.__digit_comma, self.text)
+        
 
 
 # 前後に空白を入れる
@@ -110,15 +131,13 @@ class SpaceConvert:
         self.text = text
 
     # 数値の前後と行頭にスペースを入れる
-    def add_space(self, text: str):
-        print(text)
+    def __add_space(self, text: str):
         # 数値の前に空白
         text = re.sub("([^\n\d, \.])([+-]?(?:\d+\.?\d*|\.\d+))", r"\1 \2", text)
         # 数値の後ろに空白
         text = re.sub("([+-]?(?:\d+\.?\d*|\.\d+))([^\n\d, \.])", r"\1 \2", text)
         # 先頭英字の後ろに空白
         text = re.sub("(\n[a-zA-Z]+)([亜-熙ぁ-んァ-ヶ])", r"\1 \2", text)
-        print(text + "\n")
         return text
 
     # 文字列を除外パターンで分離
@@ -141,7 +160,7 @@ class SpaceConvert:
         for doc, ptn in zip(text_arr, ptns_in_text):
             ptn = ptn.replace("/", "")  # 終了タグと開始タグを一緒にする
             if not ptn_state:  # 除外パターンに囲われていない時
-                doc = self.add_space(doc)
+                doc = self.__add_space(doc)
             converted_text += doc
             if not ptn in ptn_state:  # 除外パターンの開始
                 ptn_state.append(ptn)
@@ -164,5 +183,8 @@ def converter(file, search):
 
 
 if __name__ == "__main__":
-    sc = SpaceConvert("AAA<pre>ZZ123Z</pre>CC1234C```ZZZ```")
-    print(sc.split_text())
+    s="AAA<pre>ZZ123Z</pre>CC1234C```ZZZ```"
+    # sc = SpaceConvert(s)
+    # print(sc.split_text())
+    dc = DigitComma(s)
+    dc.cut_out()
