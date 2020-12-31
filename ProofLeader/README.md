@@ -139,7 +139,7 @@ python ProofLeader/proofLeader.py -s
 * Python 3 ( 3.6.4 で動作確認済み)
 * pathlib
 * docopt (v 2.0 以降)
-* scv
+* csv
 * os
 * re
 
