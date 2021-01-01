@@ -159,51 +159,70 @@ class SpaceConvert:
         rm_patterns = ["</{0,1}pre>", "</{0,1}code>", "```"]
         # 除外パターンでテキストを分割
         text_arr = re.split("|".join(rm_patterns), self.text)
-        text_arr.pop()
+        # text_arr.pop()
         # text_arrの各文字列がどのパターンの中にあるか
         ptns_in_text = [
             m.group() for m in re.finditer("|".join(rm_patterns), self.text)
         ]
+        print(text_arr)
+        print(ptns_in_text)
+        
+        
 
         # 現在囲まれているタグ一覧
         ptn_state = []
 
         for doc, ptn in zip(text_arr, ptns_in_text):
             # 終了タグと開始タグを一緒にする
-            ptn = ptn.replace("/", "")
+            ptn_prot = ptn.replace("/", "")
 
             # 除外パターンに囲われていない時
             if not ptn_state:
+                # 数値にスペースを入れる
                 doc = self.__add_space(doc)
+                # 数値にカンマを入れる
+                dc = DigitComma(doc)
+                doc = dc.cut_out()
+                doc = self.__erase_invalid_spaces(doc)
+            
             converted_text += doc
 
-            # 数値にカンマを入れる
-            dc = DigitComma(converted_text)
-            converted_text = dc.cut_out()
-            converted_text = self.__erase_invalid_spaces(converted_text)
-
             # 除外パターンの開始
-            if not ptn in ptn_state:
-                ptn_state.append(ptn)
+            if not ptn_prot in ptn_state:
+                ptn_state.append(ptn_prot)
             else:  # 除外パターンの終了
-                ptn_state.remove(ptn)
+                ptn_state.remove(ptn_prot)
             converted_text += ptn
+        else:
+            # テキストのブロック数と除外パターンの数が不一致の場合
+            if len(text_arr) > len(ptns_in_text) and not ptn_state:
+                # 数値にスペースを入れる
+                doc = self.__add_space(text_arr[-1])
+                # 数値にカンマを入れる
+                dc = DigitComma(doc)
+                doc = dc.cut_out()
+                converted_text += self.__erase_invalid_spaces(doc)
         return converted_text
 
 
 def converter(file, search):
     text = File.readFile(file)
-
-    if not search:
-        text = dot_to_comma(text)
-        text = space(text)
+    
+    # 数値の前後，行頭の英単語の後にスペースを入れる    
+    sc = SpaceConvert(text)
+    text = sc.split_text()
+    # ，を、に変更する
+    text = dot_to_comma(text)
+    # 指定した単語のWARNINGを出す
     text = word_to_word(text, file, search)
 
     with open(file, mode="w") as f:
         f.write(text)
 
 
-if __name__ == "__main__":
-    s = "A12 ^ 12AA<pre>Z_ 1Z 1 _ 23 - 456 Z</pre>CC- 1234C+ 12```ZZZ```"
-    sc = SpaceConvert(s)
-    print(sc.split_text())
+# if __name__ == "__main__":
+#     s = "A12 ^ 12AA<pre>Z_ 1Z 1 _ 23 - 456 Z</pre>CC- 1234C+ 12```ZZZ```AAA"
+#     s="貼り付けできるよ<code>11111</code>"
+#     print(s)
+#     sc = SpaceConvert(s)
+#     print(sc.split_text())
