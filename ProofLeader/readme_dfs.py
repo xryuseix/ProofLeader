@@ -27,6 +27,10 @@ def dfs(root="/", dir="", search=False):
         p = Path(f)
         is_exclusion = False
         for e in ex_files_prot:
+            # 除外リストのファイルがない場合
+            if not Path(e).exists():
+                continue
+            # 除外リストのファイルと一致した場合
             if p.samefile(e):
                 is_exclusion = True
                 break
