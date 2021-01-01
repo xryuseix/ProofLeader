@@ -106,10 +106,6 @@ class SpaceConvert:
         ptns_in_text = [
             m.group() for m in re.finditer("|".join(rm_patterns), self.text)
         ]
-        print(text_arr)
-        print(ptns_in_text)
-        
-        
 
         # 現在囲まれているタグ一覧
         ptn_state = []
