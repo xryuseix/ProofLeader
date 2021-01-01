@@ -25,7 +25,10 @@ if args['--version']:
         print(f.read())
     exit()
 
-SRC.file_search(root=root, dir=args['--file'][0], search = args['--search'])
+if args['--search']:
+    SRC.file_search(root=root, dir=".", search = True)
+else:
+    SRC.file_search(root=root, dir=args['--file'][0], search = False)
     
 
 print("\033[32mCHECK!!\033[0m -> https://competent-morse-3888be.netlify.app/")

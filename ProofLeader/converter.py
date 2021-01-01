@@ -146,11 +146,12 @@ class SpaceConvert:
 def converter(file, search):
     text = File.readFile(file)
     
-    # 数値の前後，行頭の英単語の後にスペースを入れる    
-    sc = SpaceConvert(text)
-    text = sc.split_text()
-    # ，を、に変更する
-    text = dot_to_comma(text)
+    if not search:
+        # 数値の前後，行頭の英単語の後にスペースを入れる    
+        sc = SpaceConvert(text)
+        text = sc.split_text()
+        # ，を、に変更する
+        text = dot_to_comma(text)
     # 指定した単語のWARNINGを出す
     text = word_to_word(text, file, search)
 
