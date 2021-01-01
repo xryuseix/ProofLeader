@@ -46,16 +46,6 @@ def word_to_word(text, file, search):
         print("\033[36mFOUND!!\033[0m: {}:{}:{}: ({})".format(file, c[0], c[1], c[2]))
     return "\n".join(textArr)
 
-
-def digit_comma(num):
-    beforeCommaNum = num.count(",")
-    s = num.split(".")
-    ret = re.sub("(\d)(?=(\d\d\d)+(?!\d))", r"\1,", s[0])
-    if len(s) > 1:
-        ret += "." + s[1]
-    return ret, ret.count(",") - beforeCommaNum
-
-
 # 数字を三桁ごとに区切ってカンマ
 class DigitComma:
     def __init__(self, text: str):
@@ -76,54 +66,6 @@ class DigitComma:
     def cut_out(self):
         # 数値を切り出してカンマを挿入
         return re.sub(r"\d+[.,\d]*\d+", self.__digit_comma, self.text)
-
-
-# 前後に空白を入れる
-def space(text):
-    resText = ""
-    delIndex = [m.span() for m in re.finditer("<pre>|</pre>|```|`|「|」{1}", text)]
-    delIndex.insert(0, [0, 0])
-    delIndex.append([len(text), len(text)])
-
-    for i in range(len(delIndex) - 1):
-        subText = text[delIndex[i][1] : delIndex[i + 1][0]]
-
-        if i % 2 == 0 or (  # 「英記号列(プログラム)」は除外
-            delIndex[i][1] > 0
-            and text[delIndex[i][1] - 1] == "「"
-            and not re.fullmatch("[^亜-熙ぁ-んァ-ヶ]*", subText)
-        ):
-            # 数値の前に空白
-            subText = re.sub(
-                "([^\n\d, \.])([+-]?(?:\d+\.?\d*|\.\d+))", r"\1 \2", subText
-            )
-            # 数値の後ろに空白
-            subText = re.sub(
-                "([+-]?(?:\d+\.?\d*|\.\d+))([^\n\d, \.])", r"\1 \2", subText
-            )
-            # 先頭英字の後ろに空白
-            subText = re.sub("(\n[a-zA-Z]+)([亜-熙ぁ-んァ-ヶ])", r"\1 \2", subText)
-
-            numPoses = re.finditer("([+-]?(?:\d+\.?\d*|\.\d+))", subText)
-            shift = 0  # カンマを置いた回数
-            for p in numPoses:  # 三桁ごとにカンマ
-                s, tmpShift = digit_comma(
-                    subText[p.span()[0] + shift : p.span()[1] + shift]
-                )
-                subText = (
-                    subText[0 : p.span()[0] + shift]
-                    + s
-                    + subText[p.span()[1] + shift :]
-                )
-                shift += tmpShift
-            if i + 1 < len(delIndex):
-                resText += subText + text[delIndex[i + 1][0] : delIndex[i + 1][1]]
-            else:
-                resText += subText
-        else:
-            resText += subText + text[delIndex[i + 1][0] : delIndex[i + 1][1]]
-    return resText
-
 
 # 数値の前後と行頭にスペースを入れる
 class SpaceConvert:
