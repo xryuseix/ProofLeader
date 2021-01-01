@@ -14,19 +14,18 @@ Options:
 )
 
 import sys
-import os
 import readme_dfs
 from docopt import docopt
 
 args = docopt(__doc__)
-root = sys.argv[0][:-14] ## ProofLeaderのルートパス
+root = sys.argv[0][:-14] # ProofLeaderのルートパス
 
 if args['--version']:
-    with open('ProofLeader/.version') as f:
+    with open('%s/.version'%(root)) as f:
         print(f.read())
     exit()
 
-readme_dfs.dfs(dir=args['--file'][0], search = args['--search'])
+readme_dfs.dfs(root=root, dir=args['--file'][0], search = args['--search'])
     
 
 print("\033[32mCHECK!!\033[0m -> https://competent-morse-3888be.netlify.app/")
