@@ -14,7 +14,7 @@ Options:
 )
 
 import sys
-import readme_dfs
+import readme_search as SRC
 from docopt import docopt
 
 args = docopt(__doc__)
@@ -25,7 +25,7 @@ if args['--version']:
         print(f.read())
     exit()
 
-readme_dfs.dfs(root=root, dir=args['--file'][0], search = args['--search'])
+SRC.file_search(root=root, dir=args['--file'][0], search = args['--search'])
     
 
 print("\033[32mCHECK!!\033[0m -> https://competent-morse-3888be.netlify.app/")
