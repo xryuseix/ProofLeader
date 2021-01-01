@@ -15,7 +15,7 @@ def get_file_names(path):
         return [path]
 
 # mdファイルを探索し，converterに渡す
-def dfs(root="/", dir="", search=False):
+def file_search(root="/", dir="", search=False):
     ex_files_prot = File.readFile("%s/exclusion_list.csv"%(root)).split("\n")
 
     files = get_file_names(dir)
