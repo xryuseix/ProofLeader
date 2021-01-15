@@ -9,4 +9,5 @@
 ```sh
 alias ProofLeader="python /path/to/ProofLeader/proofLeader.py "
 ```
-をつけるだけで多分動きます
+今までの起動コマンドはそのまま使え，かつaliasに設定しておけばディレクトリでも`ProofLeader <FOLDER NAME>`で起動するようになりました．
+また，一部のバグを修正しました．
