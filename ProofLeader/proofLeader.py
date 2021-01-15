@@ -21,7 +21,7 @@ args = docopt(__doc__)
 root = sys.argv[0][:-14] # ProofLeaderのルートパス
 
 if args['--version']:
-    with open('%s/.version'%(root)) as f:
+    with open('%s/.version'%(root if root else '.')) as f:
         print(f.read())
     exit()
 
