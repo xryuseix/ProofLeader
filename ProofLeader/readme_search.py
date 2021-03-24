@@ -4,22 +4,28 @@ import converter as Conv
 from pathlib import Path
 
 # ファイル一覧を取得する
-def get_file_names(path):
+def get_file_names(current_path):
     # 末尾の修正
-    if path[-1] == "/":
-        path = path[:-1]
-    
-    if Path(path).is_dir():
-        return glob.glob("%s/*.md"%(path))
-    else:
-        return [path]
+    if current_path[-1] == "/":
+        current_path = current_path[:-1]
+
+    res = []
+    path_list = glob.glob("%s/*" % (current_path))
+    for path in path_list:
+        if Path(path).is_dir():
+            res.extend(get_file_names(path))
+        else:
+            if path[-3:] == ".md":
+                res.append(path)
+    return res
+
 
 # mdファイルを探索し，converterに渡す
 def file_search(root="/", dir="", search=False):
-    ex_files_prot = File.readFile("%s/exclusion_list.csv"%(root)).split("\n")
+    ex_files_prot = File.readFile("%s/exclusion_list.csv" % (root)).split("\n")
 
     files = get_file_names(dir)
-    
+
     # 除外リストに記載されていないファイルパス一覧
     valid_filepath = []
 
@@ -36,9 +42,10 @@ def file_search(root="/", dir="", search=False):
                 break
         if not is_exclusion:
             valid_filepath.append(f)
+    print(valid_filepath)
+    exit()
+    # for file in valid_filepath:
+    #     Conv.converter(file, search)
+    #     print(file + " : \033[32mOK\033[0m")
 
-    for file in valid_filepath:
-        Conv.converter(file, search)
-        print(file + " : \033[32mOK\033[0m")
-
-    print("converter : \033[32mALL SUCCEEDED\033[0m")
+    # print("converter : \033[32mALL SUCCEEDED\033[0m")
