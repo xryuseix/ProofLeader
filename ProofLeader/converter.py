@@ -46,6 +46,7 @@ def word_to_word(text, file, search):
         print("\033[36mFOUND!!\033[0m: {}:{}:{}: ({})".format(file, c[0], c[1], c[2]))
     return "\n".join(textArr)
 
+
 # 数字を三桁ごとに区切ってカンマ
 class DigitComma:
     def __init__(self, text: str):
@@ -67,6 +68,7 @@ class DigitComma:
         # 数値を切り出してカンマを挿入
         return re.sub(r"\d+[.,\d]*\d+", self.__digit_comma, self.text)
 
+
 # 数値の前後と行頭にスペースを入れる
 class SpaceConvert:
     def __init__(self, text: str):
@@ -75,11 +77,13 @@ class SpaceConvert:
     # 数値の前後と行頭にスペースを入れる
     def __add_space(self, text: str):
         # 数値の前に空白
-        text = re.sub("([^\n\d, \.])([+-]?(?:\d+\.?\d*|\.\d+))", r"\1 \2", text)
+        text = re.sub("([^\n\d, \.])([+-]?(?:\d+\.?\d*|\.\d+))", r"\1\2", text)
         # 数値の後ろに空白
-        text = re.sub("([+-]?(?:\d+\.?\d*|\.\d+))([^\n\d, \.])", r"\1 \2", text)
-        # 先頭英字の後ろに空白
-        text = re.sub("(\n[a-zA-Z]+)([亜-熙ぁ-んァ-ヶ])", r"\1 \2", text)
+        text = re.sub("([+-]?(?:\d+\.?\d*|\.\d+))([^\n\d, \.])", r"\1\2", text)
+        # 英字の後ろに空白
+        text = re.sub("([a-zA-Z\d_.^,]+)([^\na-zA-Z\d_.^, ])", r"\1 \2", text)
+        # 先頭以外の英字の前に空白
+        text = re.sub("([^\na-zA-Z\d_.^, ])([a-zA-Z\d_.^,]+)", r"\1 \2", text)
         return text
 
     # 前後に空白が入ってはいけない場合，削除する
@@ -122,7 +126,7 @@ class SpaceConvert:
                 dc = DigitComma(doc)
                 doc = dc.cut_out()
                 doc = self.__erase_invalid_spaces(doc)
-            
+
             converted_text += doc
 
             # 除外パターンの開始
@@ -145,9 +149,9 @@ class SpaceConvert:
 
 def converter(file, search):
     text = File.readFile(file)
-    
+
     if not search:
-        # 数値の前後，行頭の英単語の後にスペースを入れる    
+        # 数値の前後，行頭の英単語の後にスペースを入れる
         sc = SpaceConvert(text)
         text = sc.split_text()
         # ，を、に変更する
@@ -159,9 +163,9 @@ def converter(file, search):
         f.write(text)
 
 
-# if __name__ == "__main__":
+if __name__ == "__main__":
 #     s = "A12 ^ 12AA<pre>Z_ 1Z 1 _ 23 - 456 Z</pre>CC- 1234C+ 12```ZZZ```AAA"
-#     s="貼り付けできるよ<code>11111</code>"
-#     print(s)
-#     sc = SpaceConvert(s)
-#     print(sc.split_text())
+    s = "abc1d_aaa貼り付けco11111deでき入1123.456888 力るよ\naっっ"
+    print(s)
+    sc = SpaceConvert(s)
+    print(sc.split_text())
