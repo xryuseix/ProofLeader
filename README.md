@@ -1,4 +1,4 @@
-![Python](https://img.shields.io/github/pipenv/locked/python-version/:xryuseix/:ProofLeader)
+![Python](https://img.shields.io/github/pipenv/locked/python-version/xryuseix/ProofLeader)
 
 # ProofLeader
 
