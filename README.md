@@ -157,12 +157,8 @@ python ProofLeader/proofLeader.py -s
 
 ## 必要なライブラリ及びパッケージ
 
-* Python 3 ( 3.6.4 で動作確認済み)
-* pathlib
+* Python3 ( 3.6.4 で動作確認済み)
 * docopt (v 2.0 以降)
-* csv
-* os
-* re
 
 ## URL
 
