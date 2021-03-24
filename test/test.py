@@ -1,11 +1,22 @@
 # tmpディレクトリをtestcaseからコピーする形で作成
-# cd
 import os, glob
+from pathlib import Path
 
 # ファイル一覧を取得する
-def get_file_names(path):
-    allfile = glob.glob(path + "/*")
-    return allfile
+def get_file_names(current_path):
+    # 末尾の修正
+    if current_path[-1] == "/":
+        current_path = current_path[:-1]
+
+    res = []
+    path_list = glob.glob("%s/*" % (current_path))
+    for path in path_list:
+        if Path(path).is_dir():
+            res.extend(get_file_names(path))
+        else:
+            if path[-3:] == ".md":
+                res.append(path)
+    return res
 
 
 # ファイルを読み込む
