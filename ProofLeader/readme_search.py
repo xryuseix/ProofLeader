@@ -43,9 +43,8 @@ def file_search(root="/", dir="", search=False):
         if not is_exclusion:
             valid_filepath.append(f)
     print(valid_filepath)
-    exit()
-    # for file in valid_filepath:
-    #     Conv.converter(file, search)
-    #     print(file + " : \033[32mOK\033[0m")
+    for file in valid_filepath:
+        Conv.converter(file, search)
+        print(file + " : \033[32mOK\033[0m")
 
-    # print("converter : \033[32mALL SUCCEEDED\033[0m")
+    print("converter : \033[32mALL SUCCEEDED\033[0m")
