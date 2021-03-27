@@ -81,9 +81,9 @@ class SpaceConvert:
         # 数値の後ろに空白
         text = re.sub("([+-]?(?:\d+\.?\d*|\.\d+))([^\n\d, \.])", r"\1\2", text)
         # 英字の後ろに空白
-        text = re.sub("([a-zA-Z\d_.^,]+)([^\na-zA-Z\d_.^, ])", r"\1 \2", text)
+        text = re.sub("([a-zA-Z\d_.^,\+]+)([^\na-zA-Z\d_.^,\+ ])", r"\1 \2", text)
         # 先頭以外の英字の前に空白
-        text = re.sub("([^\na-zA-Z\d_.^, ])([a-zA-Z\d_.^,]+)", r"\1 \2", text)
+        text = re.sub("([^\na-zA-Z\d_.^,\+ ])([a-zA-Z\d_.^,\+]+)", r"\1 \2", text)
         return text
 
     # 前後に空白が入ってはいけない場合，削除する
@@ -164,7 +164,7 @@ def converter(file, search):
 
 
 if __name__ == "__main__":
-#     s = "A12 ^ 12AA<pre>Z_ 1Z 1 _ 23 - 456 Z</pre>CC- 1234C+ 12```ZZZ```AAA"
+    #     s = "A12 ^ 12AA<pre>Z_ 1Z 1 _ 23 - 456 Z</pre>CC- 1234C+ 12```ZZZ```AAA"
     s = "abc1d_aaa貼り付けco11111deでき入1123.456888 力るよ\naっっ"
     print(s)
     sc = SpaceConvert(s)
