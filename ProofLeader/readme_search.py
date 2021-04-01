@@ -11,6 +11,12 @@ def get_file_names(current_path):
 
     res = []
     path_list = glob.glob("%s/*" % (current_path))
+    
+    # 与えられたのがフォルダではなくてファイルなら追加
+    if(Path(current_path).is_file()):
+        path_list.append(current_path)
+    
+    # ディレクトリならさらに探索
     for path in path_list:
         if Path(path).is_dir():
             res.extend(get_file_names(path))

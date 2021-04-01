@@ -81,9 +81,9 @@ class SpaceConvert:
         # 数値の後ろに空白
         text = re.sub("([+-]?(?:\d+\.?\d*|\.\d+))([^\n\d, \.])", r"\1\2", text)
         # 英字の後ろに空白
-        text = re.sub("([a-zA-Z\d_.^,\+]+)([^\na-zA-Z\d_.^,\+ ])", r"\1 \2", text)
+        text = re.sub("([a-zA-Z\d_.^,\+]+)([^\na-zA-Z\d_.^,\+:/\(\) ])", r"\1 \2", text)
         # 先頭以外の英字の前に空白
-        text = re.sub("([^\na-zA-Z\d_.^,\+ ])([a-zA-Z\d_.^,\+]+)", r"\1 \2", text)
+        text = re.sub("([^\na-zA-Z\d_.^,\+:/\(\) ])([a-zA-Z\d_.^,\+]+)", r"\1 \2", text)
         return text
 
     # 前後に空白が入ってはいけない場合，削除する
