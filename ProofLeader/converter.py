@@ -81,9 +81,10 @@ class SpaceConvert:
         # 数値の後ろに空白
         text = re.sub("([+-]?(?:\d+\.?\d*|\.\d+))([^\n\d, \.])", r"\1\2", text)
         # 英字の後ろに空白
-        text = re.sub("([a-zA-Z\d_\.\^,\+:\/(%]+)([^\na-zA-Z\d_.\^,\+:\/( ])", r"\1 \2", text)
+        word = "a-zA-Z\d_\.\^,\+:\/%<>\"="
+        text = re.sub("([%s\(]+)([^\n%s\( ])" % (word, word), r"\1 \2", text)
         # 先頭以外の英字の前に空白
-        text = re.sub("([^\na-zA-Z\d_.\^,\+:\/\) ])([a-zA-Z\d_.\^,\+:\/\)%]+)", r"\1 \2", text)
+        text = re.sub("([^\n%s\) ])([%s\)]+)" % (word, word), r"\1 \2", text)
         return text
 
     # 前後に空白が入ってはいけない場合，削除する
@@ -102,13 +103,13 @@ class SpaceConvert:
     def split_text(self):
         converted_text = ""
         # 変換対象外にするパターン一覧
-        rm_patterns = ["</{0,1}pre>", "</{0,1}code>", "```"]
+        rm_patterns_range = ["</{0,1}pre>", "</{0,1}code>", "```"]
         # 除外パターンでテキストを分割
-        text_arr = re.split("|".join(rm_patterns), self.text)
+        text_arr = re.split("|".join(rm_patterns_range), self.text)
         # text_arr.pop()
         # text_arrの各文字列がどのパターンの中にあるか
         ptns_in_text = [
-            m.group() for m in re.finditer("|".join(rm_patterns), self.text)
+            m.group() for m in re.finditer("|".join(rm_patterns_range), self.text)
         ]
 
         # 現在囲まれているタグ一覧
@@ -132,9 +133,19 @@ class SpaceConvert:
             # 除外パターンの開始
             if not ptn_prot in ptn_state:
                 ptn_state.append(ptn_prot)
-            else:  # 除外パターンの終了
+                # <code>の前後にスペースを入れる
+                if ptn_prot == "<code>":
+                    converted_text += " "
+                # タグを整形結果に追加
+                converted_text += ptn
+            # 除外パターンの終了
+            else:
                 ptn_state.remove(ptn_prot)
-            converted_text += ptn
+                # タグを整形結果に追加
+                converted_text += ptn
+                # <code>の前後にスペースを入れる
+                if ptn_prot == "<code>":
+                    converted_text += " "
         else:
             # テキストのブロック数と除外パターンの数が不一致の場合
             if len(text_arr) > len(ptns_in_text) and not ptn_state:
