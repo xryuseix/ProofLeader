@@ -81,7 +81,7 @@ class SpaceConvert:
         # 数値の後ろに空白
         text = re.sub("([+-]?(?:\d+\.?\d*|\.\d+))([^\n\d, \.])", r"\1\2", text)
         # 英字の後ろに空白
-        word = "a-zA-Z\d_\.\^,\+:\/%<>\"="
+        word = 'a-zA-Z\d_\.\^,\+:\/%<>"='
         text = re.sub("([%s\(]+)([^\n%s\( ])" % (word, word), r"\1 \2", text)
         # 先頭以外の英字の前に空白
         text = re.sub("([^\n%s\) ])([%s\)]+)" % (word, word), r"\1 \2", text)
@@ -97,6 +97,11 @@ class SpaceConvert:
         # アンダーバー : 前後またはその片方のスペースを消す
         text = text.replace("_ ", "_")
         text = text.replace(" _", "_")
+        return text
+
+    # タグ前後の不要なスペースを削除
+    def __erase_invalid_before_patterns_spaces(self, text: str):
+        text = re.sub(" +([<>])", r" \1", text)
         return text
 
     # 文字列を除外パターンで分離
@@ -155,6 +160,8 @@ class SpaceConvert:
                 dc = DigitComma(doc)
                 doc = dc.cut_out()
                 converted_text += self.__erase_invalid_spaces(doc)
+        # タグ前後の不要なスペースを削除
+        converted_text = self.__erase_invalid_before_patterns_spaces(converted_text)
         return converted_text
 
 
@@ -176,7 +183,7 @@ def converter(file, search):
 
 if __name__ == "__main__":
     #     s = "A12 ^ 12AA<pre>Z_ 1Z 1 _ 23 - 456 Z</pre>CC- 1234C+ 12```ZZZ```AAA"
-    s = "abc1d_aaa貼り付けco11111deでき入1123.456888 力るよ\naっっ"
+    s = "abc1d_aaa貼り付けco11111deでき入1123.456888 力る  <よ\naっ  >っ"
     print(s)
     sc = SpaceConvert(s)
     print(sc.split_text())
