@@ -101,7 +101,8 @@ class SpaceConvert:
 
     # タグ前後の不要なスペースを削除
     def __erase_invalid_before_patterns_spaces(self, text: str):
-        text = re.sub(" +([<>])", r" \1", text)
+        text = re.sub(" +<", r" <", text) # タグの前
+        text = re.sub("> +", r"> ", text) # タグの後
         return text
 
     # 文字列を除外パターンで分離
@@ -183,7 +184,7 @@ def converter(file, search):
 
 if __name__ == "__main__":
     #     s = "A12 ^ 12AA<pre>Z_ 1Z 1 _ 23 - 456 Z</pre>CC- 1234C+ 12```ZZZ```AAA"
-    s = "abc1d_aaa貼り付けco11111deでき入1123.456888 力る  <よ\naっ  >っ"
+    s = "abc1d_aaa貼り付けco11111deでき入1123.456888 力 <code>る </code> よ\naっっ"
     print(s)
     sc = SpaceConvert(s)
     print(sc.split_text())
