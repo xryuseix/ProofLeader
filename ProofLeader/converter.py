@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
-import re
-import os
+import os, sys, re
 import read_file as File
 
 
@@ -12,12 +11,13 @@ def dot_to_comma(text):
 
 # word_listを参照して警告
 def word_to_word(text, file, search):
-    if not os.path.isfile("./ProofLeader/word_list.csv"):
+    root = sys.argv[0][:-14]
+    if not os.path.isfile("{}word_list.csv".format(root)):
         return text
-    wordList = File.readFile("./ProofLeader/word_list.csv", True)
+    wordList = File.readFile("{}word_list.csv".format(root), True)
     # find_listを開く
     if search:
-        findListPath = "./ProofLeader/find_list.csv"
+        findListPath = "{}find_list.csv".format(root)
         if not os.path.isfile(findListPath):
             search = False
         with open(findListPath) as f:
@@ -101,8 +101,8 @@ class SpaceConvert:
 
     # タグ前後の不要なスペースを削除
     def __erase_invalid_before_patterns_spaces(self, text: str):
-        text = re.sub(" +<", r" <", text) # タグの前
-        text = re.sub("> +", r"> ", text) # タグの後
+        text = re.sub(" +<", r" <", text)  # タグの前
+        text = re.sub("> +", r"> ", text)  # タグの後
         return text
 
     # 文字列を除外パターンで分離
@@ -140,7 +140,7 @@ class SpaceConvert:
             if not ptn_prot in ptn_state:
                 ptn_state.append(ptn_prot)
                 # <code>の前にスペースを入れる
-                if ptn_prot == "<code>" and converted_text[-1]!='\n':
+                if ptn_prot == "<code>" and converted_text[-1] != "\n":
                     converted_text += " "
                 # タグを整形結果に追加
                 converted_text += ptn
