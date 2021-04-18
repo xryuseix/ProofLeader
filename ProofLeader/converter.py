@@ -139,8 +139,8 @@ class SpaceConvert:
             # 除外パターンの開始
             if not ptn_prot in ptn_state:
                 ptn_state.append(ptn_prot)
-                # <code>の前後にスペースを入れる
-                if ptn_prot == "<code>":
+                # <code>の前にスペースを入れる
+                if ptn_prot == "<code>" and converted_text[-1]!='\n':
                     converted_text += " "
                 # タグを整形結果に追加
                 converted_text += ptn
@@ -149,7 +149,7 @@ class SpaceConvert:
                 ptn_state.remove(ptn_prot)
                 # タグを整形結果に追加
                 converted_text += ptn
-                # <code>の前後にスペースを入れる
+                # <code>の後にスペースを入れる
                 if ptn_prot == "<code>":
                     converted_text += " "
         else:
@@ -184,7 +184,7 @@ def converter(file, search):
 
 if __name__ == "__main__":
     #     s = "A12 ^ 12AA<pre>Z_ 1Z 1 _ 23 - 456 Z</pre>CC- 1234C+ 12```ZZZ```AAA"
-    s = "abc1d_aaa貼り付けco11111deでき入1123.456888 力 <code>る </code> よ\naっっ"
+    s = "abc1d_aaa貼り付けco11111deでき入1123.456888 力 <code>る </code> よ\n<code></code>あっっ"
     print(s)
     sc = SpaceConvert(s)
     print(sc.split_text())
