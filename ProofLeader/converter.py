@@ -77,42 +77,40 @@ class SpaceConvert:
     # 数値の前後と行頭にスペースを入れる
     def __add_space(self, text: str):
         # 数値の前に空白
-        text = re.sub("([^\n\d, \.])([+-]?(?:\d+\.?\d*|\.\d+))", r"\1 \2", text)
+        text = re.sub(r"([^\n\d, \.])([\+\-]?(?:\d+\.?\d*|\.\d+))", r"\1 \2", text)
         # 数値の後ろに空白
-        text = re.sub("([+-]?(?:\d+\.?\d*|\.\d+))([^\n\d, \.])", r"\1 \2", text)
+        text = re.sub(r"([\+\-]?(?:\d+\.?\d*|\.\d+))([^\n\d, \.])", r"\1 \2", text)
         # 英字の後ろに空白
-        word = 'a-zA-Z\d_\.\^,\+:\/%<>"=\[\]\('
-        text = re.sub("([%s]+)([^\n%s ])" % (word, word), r"\1 \2", text)
+        word = r'a-zA-Z\d_\.\^,\+:\/%<>"=\[\]\(\)'
+        text = re.sub(r"([a-zA-Z][%s]*)([^\n%s ])" % (word, word), r"\1 \2", text)
         # 先頭以外の英字の前に空白
-        text = re.sub("([^\n%s\) ])([%s\)]+)" % (word, word), r"\1 \2", text)
+        text = re.sub(r"([^\n%s ])([a-zA-Z][%s]*)" % (word, word), r"\1 \2", text)
         return text
 
     # 前後に空白が入ってはいけない場合，削除する
     def __erase_invalid_spaces(self, text: str):
-        invalid_space_list = [r"_", r"-", r"+", r"^"]
+        # invalid_space_list = [r"_", r"-", r"+", r"^"]
         # 累乗記号 : 前後のスペースを消す(xor記号の場合は^を使わない)
-        text = text.replace(" ^ ", "^")
+        text = text.replace(r" ^ ", r"^")
         # プラスマイナス : 式ではない場合のみ前のスペースを消す
-        text = re.sub(r"([+-])\s(\d)", r"\1\2", text)
+        text = re.sub(r"([^(\d )])([\+\-=]) (\d)", r"\1\2\3", text)
         # アンダーバー : 前後またはその片方のスペースを消す
-        text = text.replace("_ ", "_")
-        text = text.replace(" _", "_")
+        text = text.replace("_ ", "_").replace(" _", "_")
         return text
 
     # タグ前後の不要なスペースを削除
     def __erase_invalid_before_patterns_spaces(self, text: str):
-        text = re.sub(" +<", r" <", text)  # タグの前
-        text = re.sub("> +", r"> ", text)  # タグの後
+        text = re.sub(r" +<", r" <", text)  # タグの前
+        text = re.sub(r"> +", r"> ", text)  # タグの後
         return text
 
     # 文字列を除外パターンで分離
     def split_text(self):
         converted_text = ""
         # 変換対象外にするパターン一覧
-        rm_patterns_range = ["</{0,1}pre>", "</{0,1}code>", "```"]
+        rm_patterns_range = [r"</?pre>", r"</?code>", "```"]
         # 除外パターンでテキストを分割
         text_arr = re.split("|".join(rm_patterns_range), self.text)
-        # text_arr.pop()
         # text_arrの各文字列がどのパターンの中にあるか
         ptns_in_text = [
             m.group() for m in re.finditer("|".join(rm_patterns_range), self.text)
