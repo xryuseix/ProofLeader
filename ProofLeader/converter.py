@@ -77,12 +77,12 @@ class SpaceConvert:
     # 数値の前後と行頭にスペースを入れる
     def __add_space(self, text: str):
         # 数値の前に空白
-        text = re.sub("([^\n\d, \.])([+-]?(?:\d+\.?\d*|\.\d+))", r"\1\2", text)
+        text = re.sub("([^\n\d, \.])([+-]?(?:\d+\.?\d*|\.\d+))", r"\1 \2", text)
         # 数値の後ろに空白
-        text = re.sub("([+-]?(?:\d+\.?\d*|\.\d+))([^\n\d, \.])", r"\1\2", text)
+        text = re.sub("([+-]?(?:\d+\.?\d*|\.\d+))([^\n\d, \.])", r"\1 \2", text)
         # 英字の後ろに空白
-        word = 'a-zA-Z\d_\.\^,\+:\/%<>"='
-        text = re.sub("([%s\(]+)([^\n%s\( ])" % (word, word), r"\1 \2", text)
+        word = 'a-zA-Z\d_\.\^,\+:\/%<>"=\[\]\('
+        text = re.sub("([%s]+)([^\n%s ])" % (word, word), r"\1 \2", text)
         # 先頭以外の英字の前に空白
         text = re.sub("([^\n%s\) ])([%s\)]+)" % (word, word), r"\1 \2", text)
         return text
@@ -93,7 +93,7 @@ class SpaceConvert:
         # 累乗記号 : 前後のスペースを消す(xor記号の場合は^を使わない)
         text = text.replace(" ^ ", "^")
         # プラスマイナス : 式ではない場合のみ前のスペースを消す
-        text = re.sub(r"([^(\d\s)])([+-])\s(\d)", r"\1 \2\3", text)
+        text = re.sub(r"([+-])\s(\d)", r"\1\2", text)
         # アンダーバー : 前後またはその片方のスペースを消す
         text = text.replace("_ ", "_")
         text = text.replace(" _", "_")
