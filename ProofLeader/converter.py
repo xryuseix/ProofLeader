@@ -96,6 +96,8 @@ class SpaceConvert:
         text = re.sub(r"([^(\d )])([\+\-=]) (\d)", r"\1\2\3", text)
         # アンダーバー : 前後またはその片方のスペースを消す
         text = text.replace("_ ", "_").replace(" _", "_")
+        # Python 3 を Python3 にする
+        text = re.sub(r"([A-Za-z]) (\d)", r"\1\2", text)
         return text
 
     # タグ前後の不要なスペースを削除
