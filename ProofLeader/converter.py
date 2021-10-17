@@ -116,7 +116,7 @@ class SpaceConvert:
             # 入力をエスケープ
             need_escape = r"\\\*\+\.\?\(\)\{\}\[\]\^\$\|"
             noun_invalid_reg: str = re.sub("([%s])" % (need_escape), r"\\\1", noun)
-            noun_invalid_reg = re.sub(r"(?<!\\)(.)", r" ?\1", noun_invalid_reg)
+            noun_invalid_reg = re.sub(r"(?<!\\)(.)", r" ?\1", noun_invalid_reg)[2:]
             # 置換
             text = re.sub(noun_invalid_reg, noun, text)
 
