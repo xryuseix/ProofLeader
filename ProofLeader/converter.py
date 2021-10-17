@@ -10,14 +10,13 @@ def dot_to_comma(text):
 
 
 # word_listを参照して警告
-def word_to_word(text, file, search):
-    root = sys.argv[0][:-14]
-    if not os.path.isfile("{}word_list.csv".format(root)):
+def word_to_word(text, file, search, root):
+    if not os.path.isfile("%sword_list.csv" % (root)):
         return text
-    wordList = File.readFile("{}word_list.csv".format(root), True)
+    wordList = File.readFile("%sword_list.csv" % (root), True)
     # find_listを開く
     if search:
-        findListPath = "{}find_list.csv".format(root)
+        findListPath = "%sfind_list.csv" % (root)
         if not os.path.isfile(findListPath):
             search = False
         with open(findListPath) as f:
@@ -38,12 +37,11 @@ def word_to_word(text, file, search):
                     findOut.append([i + 1, reObj.start(), li])
     for c in wordOut:
         print(
-            "\033[33mWARNING\033[0m: {}:{}:{}: ({}) => ({})".format(
-                file, c[0], c[1], c[2], c[3]
-            )
+            "\033[33mWARNING\033[0m: %s:%s:%s: (%s) => (%s)"
+            % (file, c[0], c[1], c[2], c[3])
         )
     for c in findOut:
-        print("\033[36mFOUND!!\033[0m: {}:{}:{}: ({})".format(file, c[0], c[1], c[2]))
+        print("\033[36mFOUND!!\033[0m: %s:%s:%s: (%s)" % (file, c[0], c[1], c[2]))
     return "\n".join(textArr)
 
 
@@ -71,33 +69,57 @@ class DigitComma:
 
 # 数値の前後と行頭にスペースを入れる
 class SpaceConvert:
-    def __init__(self, text: str):
+    def __init__(self, text: str, special_noun_list: list):
         self.text = text
+        self.special_noun_list = special_noun_list
 
     # 数値の前後と行頭にスペースを入れる
     def __add_space(self, text: str):
         # 数値の前に空白
-        text = re.sub(r"([^\n\d, \.])([\+\-]?(?:\d+\.?\d*|\.\d+))", r"\1 \2", text)
+        text = re.sub(r"([^\n\d, \.])((?:\d+\.?\d*|\.\d+))", r"\1 \2", text)
         # 数値の後ろに空白
         text = re.sub(r"([\+\-]?(?:\d+\.?\d*|\.\d+))([^\n\d, \.])", r"\1 \2", text)
+
+        # 記号の前後に空白
+        op = r"\+\-\*"
+        text = re.sub(r"([^%s\n ])([%s]+)" % (op, op), r"\1 \2", text)
+        text = re.sub(r"([%s]+)([^%s ])" % (op, op), r"\1 \2", text)
+
         # 英字の後ろに空白
-        word = r'a-zA-Z\d_\.\^,\+:\/%<>"=\[\]\(\)'
+        symbol = r'_\.\^,:\/%<>"\'=\[\]\(\)'
+        word = r"a-zA-Z\d" + symbol
         text = re.sub(r"([a-zA-Z][%s]*)([^\n%s ])" % (word, word), r"\1 \2", text)
         # 先頭以外の英字の前に空白
         text = re.sub(r"([^\n%s ])([a-zA-Z][%s]*)" % (word, word), r"\1 \2", text)
+
+        # "[日本語][スペース]?[演算子][スペース][数値]"を"[日本語][スペース][演算子][数値]"にする (あ+ 1 → あ +1)
+        ja = r"亜-熙ぁ-んァ-ヶ"
+        text = re.sub(r"([%s]) ?([%s]+) (\d)" % (ja, op), r"\1 \2\3", text)
+        # "[改行][スペース]?[演算子][スペース][数値]"を"[改行][演算子][数値]"にする (+ 1 → +1)
+        text = re.sub(r"\n ?([%s]+) (\d)" % (op), r"\n\1\2", text)
+
         return text
 
     # 前後に空白が入ってはいけない場合，削除する
     def __erase_invalid_spaces(self, text: str):
-        # invalid_space_list = [r"_", r"-", r"+", r"^"]
         # 累乗記号 : 前後のスペースを消す(xor記号の場合は^を使わない)
         text = text.replace(r" ^ ", r"^")
-        # プラスマイナス : 式ではない場合のみ前のスペースを消す
-        text = re.sub(r"([^(\d )])([\+\-=]) (\d)", r"\1\2\3", text)
+
         # アンダーバー : 前後またはその片方のスペースを消す
         text = text.replace("_ ", "_").replace(" _", "_")
+
         # Python 3 を Python3 にする
         text = re.sub(r"([A-Za-z]) (\d)", r"\1\2", text)
+
+        # special_noun_listに入っている，間に不要な空白が入っている単語を修正する
+        for noun in self.special_noun_list:
+            # 入力をエスケープ
+            need_escape = r"\\\*\+\.\?\(\)\{\}\[\]\^\$\|"
+            noun_invalid_reg: str = re.sub("([%s])" % (need_escape), r"\\\1", noun)
+            noun_invalid_reg = re.sub(r"(?<!\\)(.)", r" ?\1", noun_invalid_reg)
+            # 置換
+            text = re.sub(noun_invalid_reg, noun, text)
+
         return text
 
     # タグ前後の不要なスペースを削除
@@ -168,15 +190,23 @@ class SpaceConvert:
 
 def converter(file, search):
     text = File.readFile(file)
+    root = sys.argv[0][:-14]
+
+    if not os.path.isfile("%sspecial_noun_list.txt" % (root)):
+        special_noun_list = []
+    else:
+        special_noun_list = File.readFile("%sspecial_noun_list.txt" % (root)).split(
+            "\n"
+        )
 
     if not search:
         # 数値の前後，行頭の英単語の後にスペースを入れる
-        sc = SpaceConvert(text)
+        sc = SpaceConvert(text, special_noun_list)
         text = sc.split_text()
         # ，を、に変更する
         text = dot_to_comma(text)
     # 指定した単語のWARNINGを出す
-    text = word_to_word(text, file, search)
+    text = word_to_word(text, file, search, root)
 
     with open(file, mode="w") as f:
         f.write(text)
