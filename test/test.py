@@ -33,3 +33,4 @@ print("test : ({} / {}) passed!".format(same_count, len(path)))
 if same_count != len(path):
     for f in failed_list:
         print("\033[33mWARNING\033[0m : {}".format(f))
+    assert False
