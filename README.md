@@ -1,4 +1,4 @@
-![Python](https://img.shields.io/github/pipenv/locked/python-version/xryuseix/ProofLeader)
+![Python](https://img.shields.io/github/pipenv/locked/python-version/xryuseix/ProofLeader) [![Test](https://github.com/xryuseix/ProofLeader/actions/workflows/test.yml/badge.svg?branch=master)](https://github.com/xryuseix/ProofLeader/actions/workflows/test.yml)
 
 # ProofLeader
 
