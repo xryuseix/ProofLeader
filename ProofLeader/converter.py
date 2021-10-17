@@ -16,11 +16,11 @@ def word_to_word(text, file, search, root):
     wordList = File.readFile("%sword_list.csv" % (root), True)
     # find_listを開く
     if search:
-        findListPath = "%sfind_list.csv" % (root)
+        findListPath = "%sfind_list.txt" % (root)
         if not os.path.isfile(findListPath):
-            search = False
-        with open(findListPath) as f:
-            findList = [s.strip() for s in f.readlines()]
+            findListPath = []
+        else:
+            findListPath = File.readFile(findListPath).split("\n")
 
     textArr = text.splitlines()
     wordOut = []
