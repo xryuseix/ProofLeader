@@ -4,9 +4,9 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-docopt = "*"
+docopt = "==0.6.2"
 
 [dev-packages]
 
 [requires]
-python_version = "3.6.4"
+python_version = "3.9.1"
