@@ -24,16 +24,22 @@
 - 起動コマンド
 
 ```sh
-python ProofLeader/proofLeader.py
+python src/proofLeader.py
 または
-python ProofLeader/proofLeader.py -f <FOLDER_NAME>
+python src/proofLeader.py -f <FOLDER_NAME>
 ```
 
 ただし、 alias を設定することで不特定のディレクトリから実行することも可能です。
 
 ```
-alias ProofLeader="python /path/to/ProofLeader/proofLeader.py "
+alias ProofLeader="python /path/to/src/proofLeader.py"
 ProofLeader -f <FOLDER_NAME>
+```
+
+- 起動テスト
+
+```sh
+python test/test.py
 ```
 
 - コマンドラインオプション
@@ -120,11 +126,11 @@ A,(B|C)
 ## 除外ファイルの設定
 
 本プログラムは実行ディレクトリ内のすべてのファイルに対して校閲します。
-ですが、`/ProofLeader`に`exclusion_list.csv`ファイルを作り、以下のように記述することで校閲対象から除外することができます。なお、正規表現は使えません。
+ですが、`/src`に`exclusion_list.csv`ファイルを作り、以下のように記述することで校閲対象から除外することができます。なお、正規表現は使えません。
 
 ```
 SampleFolder/ex_list.md
-ProofLeader/README.md
+src/README.md
 ```
 
 ## 文字列の探索
@@ -133,10 +139,10 @@ WARNING を出すほどでもないけど、全ファイルから特定の文字
 コマンドラインオプションは`-s`または`--search`です。
 
 ```sh
-python ProofLeader/proofLeader.py - s
+python src/proofLeader.py - s
 ```
 
-`/ProofLeader`に`find_list.csv`ファイルを作り、以下のように記述することで校閲対象から除外することができます。なお、正規表現は使えません。
+`/src`に`find_list.csv`ファイルを作り、以下のように記述することで校閲対象から除外することができます。なお、正規表現は使えません。
 
 ```
 探索したい単語 1
