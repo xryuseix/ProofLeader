@@ -4,7 +4,7 @@ import subprocess
 # ファイルは直接上書きするので，コピーしておく
 utils.rm("./test/result")
 utils.cp("./test/testcase", "./test/result")
-_ = subprocess.run(["python3", "./ProofLeader/proofLeader.py", "--file", "./test/result"])
+_ = subprocess.run(["python3", "./src/proofLeader.py", "--file", "./test/result"])
 print("\n" + "-" * 30 + "\n")
 
 path = utils.get_file_names("./test/result")
