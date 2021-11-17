@@ -18,9 +18,9 @@ def word_to_word(text, file, search, root):
     if search:
         findListPath = "%sfind_list.txt" % (root)
         if not os.path.isfile(findListPath):
-            findListPath = []
+            findList = []
         else:
-            findListPath = File.readFile(findListPath).split("\n")
+            findList = File.readFile(findListPath).split("\n")
 
     textArr = text.splitlines()
     wordOut = []
@@ -35,13 +35,15 @@ def word_to_word(text, file, search, root):
                 reObj = re.search(li, text)
                 if reObj:
                     findOut.append([i + 1, reObj.start(), li])
-    for c in wordOut:
-        print(
-            "\033[33mWARNING\033[0m: %s:%s:%s: (%s) => (%s)"
-            % (file, c[0], c[1], c[2], c[3])
-        )
-    for c in findOut:
-        print("\033[36mFOUND!!\033[0m: %s:%s:%s: (%s)" % (file, c[0], c[1], c[2]))
+    if not search:
+        for c in wordOut:
+            print(
+                "\033[33mWARNING\033[0m: %s:%s:%s: (%s) => (%s)"
+                % (file, c[0], c[1], c[2], c[3])
+            )
+    if search:
+        for c in findOut:
+            print("\033[36mFOUND!!\033[0m: %s:%s:%s: (%s)" % (file, c[0], c[1], c[2]))
     return "\n".join(textArr)
 
 
