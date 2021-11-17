@@ -31,7 +31,7 @@ python src/proofLeader.py -f <FOLDER_NAME>
 
 ただし、 alias を設定することで不特定のディレクトリから実行することも可能です。
 
-```
+```sh
 alias ProofLeader="python /path/to/src/proofLeader.py"
 ProofLeader -f <FOLDER_NAME>
 ```
@@ -58,12 +58,10 @@ Options:
 
 - 期待される出力例
 
-<pre>
-folder_a/folder_b/README.md : <font color="LimeGreen">OK</font>
+<pre>folder_a/folder_b/README.md : <font color="LimeGreen">OK</font>
 folder_c/README.md : <font color="LimeGreen">OK</font>
 converter : <font color="LimeGreen">ALL OK</font>
-<font color="LimeGreen">CHECK!!</font> -> https://competent-morse-3888be.netlify.app/
-</pre>
+<font color="LimeGreen">CHECK!!</font> -> https://competent-morse-3888be.netlify.app/</pre>
 
 ## 英単語・数値の体裁修正機能
 
@@ -77,27 +75,23 @@ converter : <font color="LimeGreen">ALL OK</font>
 
 ## 文章表現警告機能
 
-- ** 文章表現の警告機能(ver1.4 で書式が変更になりました) **
+- **文章表現の警告機能(ver1.4 で書式が変更になりました)**
   `/ProofLeader `に`word_list.csv`ファイルを作り、以下のように記述します。
 
-<pre>
-After1,Before1
+<pre>After1,Before1
 After2,Before2_1,Before2_2,Before2_3
-After3,Before3_1,Before3_2
-</pre>
+After3,Before3_1,Before3_2</pre>
 
 すると以下のように`Before`が文章に入っていた場合`After`にした方がいいと警告します。
 出力例は以下のようになります(Web ページ上で文字色黄色は見えにくいので背景色を黒にしています)。
 
-<pre>
-<span style="background-color:#000000">
+<pre><span style="background-color:#000000">
 <font color="Yellow">WARNING</font><font color="White">: ファイル名:行数:行頭から何文字目: (致します) => (いたします)</font>
-</span>
-</pre>
+</span></pre>
 
 また`Before`は OR 指定ができます。
 
-```
+```txt
 A,(B|C)
 ```
 
@@ -109,14 +103,14 @@ A,(B|C)
 
 (例)
 
-```
+```markdown
 <pre>
 123456 // 123,456 にはならない
 </pre>
 <code>11111</code> // <code>11,111</code> にはならない
 ```
 
-```
+```markdown
 <pre>
 致します // WARNING が表示されます。
 </pre>
@@ -128,7 +122,7 @@ A,(B|C)
 本プログラムは実行ディレクトリ内のすべてのファイルに対して校閲します。
 ですが、`/src`に`exclusion_list.csv`ファイルを作り、以下のように記述することで校閲対象から除外することができます。なお、正規表現は使えません。
 
-```
+```sh
 SampleFolder/ex_list.md
 src/README.md
 ```
@@ -144,14 +138,12 @@ python src/proofLeader.py - s
 
 `/src`に`find_list.csv`ファイルを作り、以下のように記述することで校閲対象から除外することができます。なお、正規表現は使えません。
 
-```
+```txt
 探索したい単語 1
 探索したい単語 2
 ```
 
 出力は以下のようになります。
 
-<pre>
-<font color="SteelBlue">FOUND!!</font>: ファイル名:行数:行頭から何文字目: (探索したい単語1)
-<font color="SteelBlue">FOUND!!</font>: ファイル名:行数:行頭から何文字目: (探索したい単語2)
-</pre>
+<pre><font color="SteelBlue">FOUND!!</font>: ファイル名:行数:行頭から何文字目: (探索したい単語1)
+<font color="SteelBlue">FOUND!!</font>: ファイル名:行数:行頭から何文字目: (探索したい単語2)</pre>
