@@ -5,46 +5,46 @@ import read_file as File
 
 # ．，を、。に変換
 def dot_to_comma(text):
-    replacedText = re.sub("，", r"、", text)
-    return re.sub("．", r"。", replacedText)
+    replaced_text = re.sub("，", r"、", text)
+    return re.sub("．", r"。", replaced_text)
 
 
 # word_listを参照して警告
 def word_to_word(text, file, search, root):
     if not os.path.isfile("%sword_list.csv" % (root)):
         return text
-    wordList = File.readFile("%sword_list.csv" % (root), True)
+    word_list = File.readFile("%sword_list.csv" % (root), True)
     # find_listを開く
     if search:
-        findListPath = "%sfind_list.txt" % (root)
-        if not os.path.isfile(findListPath):
-            findList = []
+        find_list_path = "%sfind_list.txt" % (root)
+        if not os.path.isfile(find_list_path):
+            find_list = []
         else:
-            findList = File.readFile(findListPath).split("\n")
+            find_list = File.readFile(find_list_path).split("\n")
 
-    textArr = text.splitlines()
-    wordOut = []
-    findOut = []
-    for i, text in enumerate(textArr):
-        for li in wordList:  # 文字列警告
-            reObj = re.search(li[0], text)
-            if reObj:
-                wordOut.append([i + 1, reObj.start(), reObj.group(), li[1]])
+    text_arr = text.splitlines()
+    warning_list = []
+    find_out_list = []
+    for i, text in enumerate(text_arr):
+        for word in word_list:  # 文字列警告
+            re_obj = re.search(word[0], text)
+            if re_obj:
+                warning_list.append([i + 1, re_obj.start(), re_obj.group(), word[1]])
         if search:  # 文字列探索
-            for li in findList:
-                reObj = re.search(li, text)
-                if reObj:
-                    findOut.append([i + 1, reObj.start(), li])
+            for word in find_list:
+                re_obj = re.search(word, text)
+                if re_obj:
+                    find_out_list.append([i + 1, re_obj.start(), word])
     if not search:
-        for c in wordOut:
+        for c in warning_list:
             print(
                 "\033[33mWARNING\033[0m: %s:%s:%s: (%s) => (%s)"
                 % (file, c[0], c[1], c[2], c[3])
             )
     if search:
-        for c in findOut:
+        for c in find_out_list:
             print("\033[36mFOUND!!\033[0m: %s:%s:%s: (%s)" % (file, c[0], c[1], c[2]))
-    return "\n".join(textArr)
+    return "\n".join(text_arr)
 
 
 # 数字を三桁ごとに区切ってカンマ
